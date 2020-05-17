@@ -4,11 +4,21 @@ env
 media
 .DS_Store
 *.sqlite3
+db.sqlite3
 *.env
+.env
+.venv
+env/
+ENV/
 *.log
 *.idea/
 .idea/
 .idea/**
+
+# Settings
+django-ecommerce/settings/production.py
+django-ecommerce/wsgi.py
+manage.py
 
 # Distribution / packaging 
 .Python build/ 
@@ -44,6 +54,8 @@ Control.system-ca-bundle
 GitHub.sublime-settings 
 
 # Visual Studio Code # 
+.vscode/
+*.vscode/
 .vscode/* 
 !.vscode/settings.json 
 !.vscode/tasks.json 
