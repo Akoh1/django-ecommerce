@@ -11,5 +11,8 @@ urlpatterns = [
     path('add-to-cart/<slug>/', views.add_to_cart, name='add-to-cart'),
     path('remove-from-cart/<slug>/', views.remove_from_cart, name='remove-from-cart'),
     path('remove-product-from-cart/<slug>/', views.remove_a_product_from_cart, name='remove-product-from-cart'),
-    path('payment/<payment_option>/', views.PaymentView.as_view(), name='payment'),
+    path('payment/stripe/', views.PaymentView.as_view(), name='payment'),
+    path('payment/paypal/', views.paypal_payment, name='paypal_payment'),
+    path('payment/paypal/done', views.paypal_done, name='paypal_done'),
+    path('payment/paypal/cancelled', views.paypal_cancelled, name='paypal_cancelled'),
 ]

@@ -9,6 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CheckoutOrderForm
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from paypal.standard.forms import PayPalPaymentsForm
 
 # Create your views here.
 import stripe
@@ -47,9 +50,10 @@ class Checkout(View):
                 order.save()
                 if payment == 'S':
                     print(form.cleaned_data)
-                    return redirect('core:payment', payment_option='stripe')
+                    return redirect('core:payment')
+                    # return redirect('core:payment', payment_option='stripe')
                 elif payment == 'P':
-                    return redirect('core:payment', payment_option='paypal')
+                    return redirect('core:paypal_payment')
                 else:
                     messages.warning(self.request, "Invalid Payment Option selected")
                     return redirect('core:checkout')
@@ -57,7 +61,34 @@ class Checkout(View):
         except ObjectDoesNotExist:
             messages.error(self.request, "You don't have an active order")
             return redirect("core:cart-summary")
-        
+
+def paypal_payment(request):
+    order = Order.objects.get(user=request.user, ordered=False)
+    context = {'order': order}
+    amount = int(order.get_total() * 100)
+
+    paypal_dict = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": amount,
+        "item_name": "Order {}".format(order.id),
+        "invoice": str(order.id),
+        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+        "return": request.build_absolute_uri(reverse('core:paypal_done')),
+        "cancel_return": request.build_absolute_uri(reverse('core:paypal_cancelled')),
+        # "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
+    }
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form,
+               "order": order}
+    return render(request, "paypal_payment.html", context) 
+
+@csrf_exempt
+def paypal_done(request):
+    return render(request, "paypal_doen.html")
+
+@csrf_exempt
+def paypal_cancelled(request):
+    return render(request, "paypal_cancelled.html")
 
 class PaymentView(View):
     def get(self, *args, **kwargs):

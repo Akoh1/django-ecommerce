@@ -29,7 +29,7 @@ DEBUG_TOOLBAR_PANELS = [
 
 
 def show_toolbar(request):
-    return True
+    return False
 
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -47,3 +47,7 @@ DATABASES = {
 STRIPE_KEY = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 STRIPE_PUBLIC_KEY = ''
 STRIPE_SECRET_KEY = ''
+
+# django paypal settings
+PAYPAL_RECEIVER_EMAIL = 'akohsamuel018@gmail.com'
+PAYPAL_TEST = True

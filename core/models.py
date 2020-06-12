@@ -25,6 +25,7 @@ class Product(models.Model):
 	category = models.CharField(choices=CHOICES_OF_CATEGORY, max_length=2)
 	label = models.CharField(choices=LABELS, max_length=2)
 	decription = models.TextField()
+	image = models.ImageField(blank=True, null=True, upload_to="images_uploads/")
 	slug = models.SlugField()
 
 	def __str__(self):
