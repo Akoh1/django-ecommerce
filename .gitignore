@@ -16,6 +16,7 @@ ENV/
 .idea/**
 
 # Settings
+django-ecommerce/settings/production.py
 django-ecommerce/wsgi.py
 manage.py
 
